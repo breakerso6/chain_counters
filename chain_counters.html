@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>カウンター</title>
+  <style>
+    .counter-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .counter {
+      margin: 10px;
+      font-size: 20px;
+    }
+    button {
+      margin: 0 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>カウンター</h1>
+<div class="counter-container">
+  <!-- カウンター1から8までの要素を生成 -->
+  <div id="counters"></div>
+</div>
+
+<script>
+  // カウンター数と初期化
+  const numCounters = 8;
+  const counters = Array(numCounters).fill(0);
+
+  // カウンターを表示
+  const countersContainer = document.getElementById("counters");
+
+  counters.forEach((_, index) => {
+    const counterDiv = document.createElement("div");
+    counterDiv.className = "counter";
+    counterDiv.id = `counter-${index + 1}`;
+
+    const counterText = document.createElement("span");
+    counterText.id = `counter-value-${index + 1}`;
+    counterText.textContent = `カウンター ${index + 1}: ${counters[index]}`;
+
+    const incrementBtn = document.createElement("button");
+    incrementBtn.textContent = "+";
+    incrementBtn.onclick = () => updateCounter(index, 1);
+
+    const decrementBtn = document.createElement("button");
+    decrementBtn.textContent = "-";
+    decrementBtn.onclick = () => updateCounter(index, -1);
+
+    counterDiv.appendChild(counterText);
+    counterDiv.appendChild(incrementBtn);
+    counterDiv.appendChild(decrementBtn);
+    countersContainer.appendChild(counterDiv);
+  });
+
+  // カウンターの値を更新
+  function updateCounter(index, delta) {
+    counters[index] += delta;
+    document.getElementById(`counter-value-${index + 1}`).textContent = `カウンター ${index + 1}: ${counters[index]}`;
+  }
+</script>
+
+</body>
+</html>
