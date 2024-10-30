@@ -18,51 +18,91 @@
       margin: 0 5px;
       font-size: 16px;
     }
+    input[type="text"] {
+      margin-right: 10px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
 
 <h1>カウンター</h1>
 <div class="counter-container">
-  <!-- カウンター1から8までの要素を生成 -->
+  <button onclick="addCounter()">カウンターを追加</button>
+  <button onclick="removeCounter()">カウンターを削除</button>
   <div id="counters"></div>
 </div>
 
 <script>
-  // カウンター数と初期化
-  const numCounters = 8;
-  const counters = Array(numCounters).fill(0);
+  // カウンターの初期状態
+  let counters = [];
+  let counterNames = [];
 
-  // カウンターを表示
-  const countersContainer = document.getElementById("counters");
+  // カウンター要素を表示
+  function renderCounters() {
+    const countersContainer = document.getElementById("counters");
+    countersContainer.innerHTML = ""; // 既存のカウンターをクリア
 
-  counters.forEach((_, index) => {
-    const counterDiv = document.createElement("div");
-    counterDiv.className = "counter";
-    counterDiv.id = `counter-${index + 1}`;
+    counters.forEach((value, index) => {
+      const counterDiv = document.createElement("div");
+      counterDiv.className = "counter";
 
-    const counterText = document.createElement("span");
-    counterText.id = `counter-value-${index + 1}`;
-    counterText.textContent = `カウンター ${index + 1}: ${counters[index]}`;
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = counterNames[index];
+      nameInput.oninput = () => updateCounterName(index, nameInput.value);
 
-    const incrementBtn = document.createElement("button");
-    incrementBtn.textContent = "+";
-    incrementBtn.onclick = () => updateCounter(index, 1);
+      const counterText = document.createElement("span");
+      counterText.id = `counter-value-${index}`;
+      counterText.textContent = `${counterNames[index]}: ${value}`;
 
-    const decrementBtn = document.createElement("button");
-    decrementBtn.textContent = "-";
-    decrementBtn.onclick = () => updateCounter(index, -1);
+      const incrementBtn = document.createElement("button");
+      incrementBtn.textContent = "+";
+      incrementBtn.onclick = () => updateCounter(index, 1);
 
-    counterDiv.appendChild(counterText);
-    counterDiv.appendChild(incrementBtn);
-    counterDiv.appendChild(decrementBtn);
-    countersContainer.appendChild(counterDiv);
-  });
+      const decrementBtn = document.createElement("button");
+      decrementBtn.textContent = "-";
+      decrementBtn.onclick = () => updateCounter(index, -1);
+
+      counterDiv.appendChild(nameInput);
+      counterDiv.appendChild(counterText);
+      counterDiv.appendChild(incrementBtn);
+      counterDiv.appendChild(decrementBtn);
+      countersContainer.appendChild(counterDiv);
+    });
+  }
+
+  // カウンターを追加
+  function addCounter() {
+    counters.push(0); // 新しいカウンターの初期値は0
+    counterNames.push(`カウンター ${counters.length}`);
+    renderCounters();
+  }
+
+  // カウンターを削除
+  function removeCounter() {
+    if (counters.length > 0) {
+      counters.pop(); // 最後のカウンターを削除
+      counterNames.pop(); // 最後のカウンター名も削除
+      renderCounters();
+    }
+  }
 
   // カウンターの値を更新
   function updateCounter(index, delta) {
     counters[index] += delta;
-    document.getElementById(`counter-value-${index + 1}`).textContent = `カウンター ${index + 1}: ${counters[index]}`;
+    document.getElementById(`counter-value-${index}`).textContent = `${counterNames[index]}: ${counters[index]}`;
+  }
+
+  // カウンターの名前を更新
+  function updateCounterName(index, newName) {
+    counterNames[index] = newName;
+    document.getElementById(`counter-value-${index}`).textContent = `${newName}: ${counters[index]}`;
+  }
+
+  // 初期のカウンターをいくつか追加
+  for (let i = 0; i < 8; i++) {
+    addCounter();
   }
 </script>
 
